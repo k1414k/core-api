@@ -29,3 +29,9 @@
 !/storage/.keep
 /tmp/storage/*
 !/tmp/storage/.keep
+
+node_modules
+vendor/bundle
+.env*
+.git
+.gitignore
