@@ -8,10 +8,11 @@
 FROM ruby:3.2.4-slim AS base
 
 # 必要な環境変数をセット
-ENV RAILS_ENV=production \   
-    BUNDLE_WITHOUT="development:test" \   
-    BUNDLE_DEPLOYMENT=1 \               
-    LANG=C.UTF-8
+ENV RAILS_ENV=production \
+    BUNDLE_WITHOUT="development:test" \
+    BUNDLE_DEPLOYMENT=1 \
+    LANG=C.UTF-8 \
+    PATH="/usr/local/bundle/bin:${PATH}"
 
 # システムパッケージをインストール
 # - build-essential: gemのネイティブ拡張コンパイルに必要
