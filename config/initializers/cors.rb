@@ -3,10 +3,13 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    # NEXT_PUBLIC_FRONT_URL に設定したURLからのアクセスのみ許可
-    # 開発時 → http://localhost:3001
-    # 本番時 → https://あなたのドメイン.com
-    origins ENV.fetch("FRONTEND_URL", "http://localhost:3001")
+    # FRONTEND_ORIGINS でカンマ区切りの複数フロントエンドを許可できるようにする。
+    # 例）https://auction.jongin.blog,https://admin.jongin.blog
+    raw_origins =
+      ENV["FRONTEND_ORIGINS"].presence ||
+      ENV.fetch("FRONTEND_URL", "http://localhost:3001")
+
+    origins raw_origins.split(",").map(&:strip)
 
     resource "*",
       headers: :any,

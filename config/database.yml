@@ -12,12 +12,12 @@ default: &default
 
 development:
   <<: *default
-  database: auction_development   # ローカル開発用DB名
+  database: products_api_development   # ローカル開発用DB名（共通API用）
 
 test:
   <<: *default
-  database: auction_test          # テスト用DB名
+  database: products_api_test          # テスト用DB名（共通API用）
 
 production:
   <<: *default
-  database: auction_production    # 本番DB名（RDS上に作成）
+  database: products_api_production    # 本番DB名（共通API用、RDS上に作成）

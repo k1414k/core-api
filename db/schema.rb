@@ -11,6 +11,9 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.1].define(version: 2026_02_14_101213) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -40,7 +43,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_14_101213) do
   end
 
   create_table "addresses", force: :cascade do |t|
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.string "title", null: false
     t.string "name", null: false
     t.text "address", null: false
@@ -58,8 +61,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_14_101213) do
   end
 
   create_table "favorites", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "item_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "item_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["item_id"], name: "index_favorites_on_item_id"
@@ -67,8 +70,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_14_101213) do
   end
 
   create_table "items", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "category_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "category_id", null: false
     t.string "title", null: false
     t.text "description", default: "こちらの商品はまだ説明が書いていません。", null: false
     t.integer "price", null: false
@@ -83,8 +86,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_14_101213) do
   end
 
   create_table "messages", force: :cascade do |t|
-    t.integer "order_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "order_id", null: false
+    t.bigint "user_id", null: false
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -93,7 +96,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_14_101213) do
   end
 
   create_table "orders", force: :cascade do |t|
-    t.integer "item_id", null: false
+    t.bigint "item_id", null: false
     t.bigint "buyer_id", null: false
     t.bigint "seller_id", null: false
     t.integer "status", default: 0, null: false
