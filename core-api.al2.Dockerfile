@@ -50,7 +50,7 @@ FROM base AS builder
 WORKDIR /app
 
 # Clone the application from GitHub using HTTPS.
-RUN git clone https://github.com/k1414k/auction-api.git .
+RUN git clone https://github.com/k1414k/core-api.git .
 
 # Install gems, excluding development and test groups.
 RUN bundle config set --local without 'development:test' && \
