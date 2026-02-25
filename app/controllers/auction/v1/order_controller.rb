@@ -1,4 +1,4 @@
-class V1::OrderController < ApplicationController
+class Auction::V1::OrderController < ApplicationController
   before_action :authenticate_user!
 
   def create

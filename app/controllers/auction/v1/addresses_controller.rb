@@ -1,4 +1,4 @@
-class V1::AddressesController < ApplicationController
+class Auction::V1::AddressesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_address, only: [:update, :destroy]
 

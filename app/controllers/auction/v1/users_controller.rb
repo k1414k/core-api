@@ -1,4 +1,4 @@
-class V1::UsersController < ApplicationController
+class Auction::V1::UsersController < ApplicationController
   before_action :authenticate_user!
 
   def my_profile

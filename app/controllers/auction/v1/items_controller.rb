@@ -1,4 +1,4 @@
-class V1::ItemsController < ApplicationController
+class Auction::V1::ItemsController < ApplicationController
   before_action :set_item, only: [:show, :update, :destroy]
   before_action :authenticate_user!, only: [:create] # index/show は未ログインでも閲覧可
   

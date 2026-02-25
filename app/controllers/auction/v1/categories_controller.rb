@@ -1,4 +1,4 @@
-class V1::CategoriesController < ApplicationController
+class Auction::V1::CategoriesController < ApplicationController
   # before_action :set_category, only: [:show]
 
   def index

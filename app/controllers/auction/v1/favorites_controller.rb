@@ -1,4 +1,4 @@
-class V1::FavoritesController < ApplicationController
+class Auction::V1::FavoritesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_item
 
