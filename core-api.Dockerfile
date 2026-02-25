@@ -60,7 +60,7 @@ WORKDIR /app
 # NOTE: Using HTTPS instead of SSH to avoid insecurely handling SSH keys in the image.
 # If your repository is private, consider using build secrets or a multi-stage build
 # where the code is copied from the local context.
-RUN git clone https://github.com/k1414k/auction-api.git .
+RUN git clone https://github.com/k1414k/core-api.git .
 
 # Install gems, excluding development and test groups for a smaller image.
 RUN bundle config set --local without 'development:test' && \
