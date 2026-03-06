@@ -11,6 +11,12 @@ Rails.application.routes.draw do
   
   namespace :admin do
     namespace :v1, module: :v1, path: "v1" do
+      resources :users, only: [:index] do
+        member do
+          patch :role, action: :update_role
+          patch :permissions, action: :update_permissions
+        end
+      end
       resources :items
       resources :categories
     end

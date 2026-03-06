@@ -5,7 +5,7 @@ class ApplicationController < ActionController::API
 
   protected
   def require_admin! #管理者権限必要操作はbefore_actionで必ず指定すること
-    head :forbidden unless current_user&.admin?
+    head :forbidden unless current_user&.admin? || current_user&.super_admin?
   end
 
   def config_permitted_params

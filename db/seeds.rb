@@ -1,7 +1,7 @@
-Post.find_or_create_by!(slug: "designing-infrastructure-for-app") do |post|
-  post.title = "再現できるデプロイと公開構成をどう設計したか"
-  post.excerpt = "Docker / CI/CD / AWS / DB設計を切り離して考えるのではなく、公開後も運用しやすい一つの構成として整理した記録。"
-  post.content = <<~TEXT
+post = Post.find_or_initialize_by(slug: "designing-infrastructure-for-app")
+post.title = "再現できるデプロイと公開構成をどう設計したか"
+post.excerpt = "Docker / CI/CD / AWS / DB設計を切り離して考えるのではなく、公開後も運用しやすい一つの構成として整理した記録。"
+post.content = <<~TEXT
     このアプリでは、ローカルで動くものを作るだけでなく、
     公開後も自分で把握しやすく、修正しやすく、再現しやすい構成にすることを強く意識しました。
 
@@ -172,15 +172,15 @@ Post.find_or_create_by!(slug: "designing-infrastructure-for-app") do |post|
     ただ公開するだけではなく、
     何度でも説明できて、何度でも再現できる構成にしておくことが大きな価値になると考えています。
   TEXT
-  post.cover_image_url = "https://api.jongin.blog/images/design-infra.png"
-  post.status = :published
-  post.published_at = Time.current
-end
+post.cover_image_url = "https://api.jongin.blog/images/design-infra.png"
+post.status = :published
+post.published_at ||= Time.current
+post.save!
 
-Post.find_or_create_by!(slug: "designing-auction-architecture") do |post|
-  post.title = "拡張しやすい中古オークションアプリの構成をどう考えたか"
-  post.excerpt = "Rails API と Next.js の責務分離、管理画面や記事機能を見据えた拡張性、そして全体設計の意図を一つにまとめた記録。"
-  post.content = <<~TEXT
+post = Post.find_or_initialize_by(slug: "designing-auction-architecture")
+post.title = "拡張しやすい中古オークションアプリの構成をどう考えたか"
+post.excerpt = "Rails API と Next.js の責務分離、管理画面や記事機能を見据えた拡張性、そして全体設計の意図を一つにまとめた記録。"
+post.content = <<~TEXT
     この個人開発では、中古オークションをテーマにしたアプリを作っています。
     ただ、今回の開発で特に重視したのは、単に動くものを作ることではありませんでした。
     あとから直しやすいこと、機能追加しやすいこと、そして構成の意図を自分の言葉で説明できることを強く意識して進めました。
@@ -265,15 +265,15 @@ Post.find_or_create_by!(slug: "designing-auction-architecture") do |post|
     今回のアプリでは、その土台づくりに一番力を入れました。
     だからこそ、この構成そのものが自分の設計姿勢を表すものになっていると考えています。
   TEXT
-  post.cover_image_url = "https://api.jongin.blog/images/aws-infra.png"
-  post.status = :published
-  post.published_at = Time.current
-end
+post.cover_image_url = "https://api.jongin.blog/images/aws-infra.png"
+post.status = :published
+post.published_at ||= Time.current
+post.save!
 
-Post.find_or_create_by!(slug: "how-core-transaction") do |post|
-  post.title = "中古オークションアプリの取引設計をどう整理したか"
-  post.excerpt = "items・orders・messages を中心に、favorites・addresses・role まで含めて、実際の利用フローに沿う DB 設計をどう考えたかを整理した記事です。"
-  post.content = <<~TEXT
+post = Post.find_or_initialize_by(slug: "how-core-transaction")
+post.title = "中古オークションアプリの取引設計をどう整理したか"
+post.excerpt = "items・orders・messages を中心に、favorites・addresses・role まで含めて、実際の利用フローに沿う DB 設計をどう考えたかを整理した記事です。"
+post.content = <<~TEXT
     このアプリを作る中で、特に時間をかけて考えたのが、取引まわりのデータベース設計でした。
 
     画面づくりを進めていると、
@@ -484,7 +484,7 @@ Post.find_or_create_by!(slug: "how-core-transaction") do |post|
     見えにくい部分ではありますが、
     この DB 設計こそが、アプリ全体の一貫性を支える重要な基盤になっていると考えています。
   TEXT
-  post.cover_image_url = "https://api.jongin.blog/images/db-table.png"
-  post.status = :published
-  post.published_at = Time.current
-end
+post.cover_image_url = "https://api.jongin.blog/images/db-table.png"
+post.status = :published
+post.published_at ||= Time.current
+post.save!

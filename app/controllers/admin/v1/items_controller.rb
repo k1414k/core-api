@@ -1,6 +1,7 @@
-class Admin::V1::ItemsController < ApplicationController
+class Admin::V1::ItemsController < Admin::V1::BaseController
   before_action :set_item, only: [:show, :update, :destroy]
-  before_action :authenticate_user!, only: [:create] # index/show は未ログインでも閲覧可
+  # 管理画面経由は最低限「管理者のみ」に揃える
+  # 以降、必要に応じて authorize_admin_resource!(:items, :read|:create|:update|:destroy) を追加する
   
   def index
     items = Item.includes(images_attachments: :blob) # N+1 対策

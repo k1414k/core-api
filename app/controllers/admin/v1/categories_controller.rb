@@ -1,4 +1,8 @@
-class Admin::V1::CategoriesController < ApplicationController
+class Admin::V1::CategoriesController < Admin::V1::BaseController
+  before_action -> { authorize_admin_resource!(:categories, :read) }, only: [:index]
+  before_action -> { authorize_admin_resource!(:categories, :create) }, only: [:create]
+  before_action -> { authorize_admin_resource!(:categories, :update) }, only: [:update]
+  before_action -> { authorize_admin_resource!(:categories, :destroy) }, only: [:destroy]
   before_action :set_category, only: [:update, :destroy]
 
   def index
