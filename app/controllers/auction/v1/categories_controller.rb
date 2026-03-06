@@ -17,6 +17,6 @@ class Auction::V1::CategoriesController < ApplicationController
   end
 
   def category_params
-    params.require(:categories).permit(:name)
+    params.permit(:name)
   end
 end

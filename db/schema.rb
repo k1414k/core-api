@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_02_14_101213) do
+ActiveRecord::Schema[7.1].define(version: 2026_03_04_155550) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -106,6 +106,20 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_14_101213) do
     t.index ["buyer_id"], name: "index_orders_on_buyer_id"
     t.index ["item_id"], name: "index_orders_on_item_id"
     t.index ["seller_id"], name: "index_orders_on_seller_id"
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "slug", null: false
+    t.string "excerpt", null: false
+    t.text "content", null: false
+    t.string "cover_image_url"
+    t.integer "status", default: 0, null: false
+    t.datetime "published_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_posts_on_slug", unique: true
+    t.index ["status"], name: "index_posts_on_status"
   end
 
   create_table "users", force: :cascade do |t|
