@@ -266,7 +266,6 @@ Post.find_or_create_by!(slug: "designing-auction-architecture") do |post|
     だからこそ、この構成そのものが自分の設計姿勢を表すものになっていると考えています。
   TEXT
   post.cover_image_url = "https://api.jongin.blog/images/aws-infra.png"
-  post.cover_image_url = "/images/posts/designing-an-extensible-auction-app-architecture.png"
   post.status = :published
   post.published_at = Time.current
 end
