@@ -29,6 +29,7 @@ class Admin::V1::CategoriesController < Admin::V1::BaseController
   end
 
   def destroy
+    
     if @category.destroy
       head :no_content
     else
