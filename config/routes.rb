@@ -17,6 +17,7 @@ Rails.application.routes.draw do
           patch :permissions, action: :update_permissions
         end
       end
+      get "dashboard", to: "dashboard#index"
       resources :items
       resources :categories
     end
