@@ -7,14 +7,14 @@ class Admin::V1::CategoriesController < Admin::V1::BaseController
 
   def index
     categories = Category.order(created_at: :desc)
-    render json: categories, status: :ok
+    render json: categories.map { |category| category_json(category) }, status: :ok
   end
 
   def create
     category = Category.new(category_params)
 
     if category.save
-      render json: category, status: :created
+      render json: category_json(category), status: :created
     else
       render json: { errors: category.errors.full_messages }, status: :unprocessable_entity
     end
@@ -22,7 +22,7 @@ class Admin::V1::CategoriesController < Admin::V1::BaseController
 
   def update
     if @category.update(category_params)
-      render json: @category, status: :ok
+      render json: category_json(@category), status: :ok
     else
       render json: { errors: @category.errors.full_messages }, status: :unprocessable_entity
     end
@@ -44,6 +44,12 @@ class Admin::V1::CategoriesController < Admin::V1::BaseController
   end
 
   def category_params
-    params.require(:category).permit(:name)
+    params.require(:category).permit(:name, :image)
+  end
+
+  def category_json(category)
+    category.as_json.merge(
+      image_url: category.image.attached? ? url_for(category.image) : nil
+    )
   end
 end

@@ -1,15 +1,20 @@
 class Admin::V1::ItemsController < Admin::V1::BaseController
   before_action :set_item, only: [:show, :update, :destroy]
   # 管理画面経由は最低限「管理者のみ」に揃える
-  # 以降、必要に応じて authorize_admin_resource!(:items, :read|:create|:update|:destroy) を追加する
+  before_action -> { authorize_admin_resource!(:items, :read) }, only: [:index, :show]
+  before_action -> { authorize_admin_resource!(:items, :create) }, only: [:create]
+  before_action -> { authorize_admin_resource!(:items, :update) }, only: [:update]
+  before_action -> { authorize_admin_resource!(:items, :destroy) }, only: [:destroy]
   
   def index
-    items = Item.includes(images_attachments: :blob) # N+1 対策
+    items = Item.includes(:category, :user, images_attachments: :blob) # N+1 対策
     render json: items.map { |item|
       {
         **item.as_json,
         is_favorited: current_user ? current_user.favorited?(item) : false,
-        image: item.images.attached? ? url_for(item.images.first) : nil # thumbnail
+        image: item.images.attached? ? url_for(item.images.first) : nil, # thumbnail
+        user_nickname: item.user.nickname,
+        category_name: item.category&.name
       }
     }
   end
