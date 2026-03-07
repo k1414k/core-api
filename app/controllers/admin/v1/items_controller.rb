@@ -61,3 +61,4 @@ class Admin::V1::ItemsController < Admin::V1::BaseController
     params.require(:item).permit(:title, :description, :price, :category_id, :favorites, :condition, :trading_status, images: [])
   end
 end
+

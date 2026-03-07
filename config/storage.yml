@@ -12,9 +12,11 @@ local:
 
 # 本番環境：AWS S3に保存
 # 環境変数からアクセスキーを読み込む（.env.productionに記載）
+# Rails.env.production? 以外では ENV.fetch を使わず、ENV[] による参照のみにして
+# ローカル開発で AWS_* が未設定でも KeyError にならないようにする。
 amazon:
   service: S3
-  access_key_id:     <%= ENV.fetch("AWS_ACCESS_KEY_ID") %>       # IAMユーザーのアクセスキー
-  secret_access_key: <%= ENV.fetch("AWS_SECRET_ACCESS_KEY") %>   # IAMユーザーのシークレットキー
+  access_key_id:     <%= Rails.env.production? ? ENV.fetch("AWS_ACCESS_KEY_ID") : ENV["AWS_ACCESS_KEY_ID"] %>       # IAMユーザーのアクセスキー
+  secret_access_key: <%= Rails.env.production? ? ENV.fetch("AWS_SECRET_ACCESS_KEY") : ENV["AWS_SECRET_ACCESS_KEY"] %>   # IAMユーザーのシークレットキー
   region:            <%= ENV.fetch("AWS_REGION", "ap-northeast-1") %>  # 東京リージョン
-  bucket:            <%= ENV.fetch("S3_BUCKET_NAME") %>          # S3バケット名
+  bucket:            <%= Rails.env.production? ? ENV.fetch("S3_BUCKET_NAME") : ENV["S3_BUCKET_NAME"] %>          # S3バケット名
