@@ -4,6 +4,10 @@ class Item < ApplicationRecord
   has_one :order
   has_many :favorites, dependent: :destroy
   has_many :favorited_users, through: :favorites, source: :user
+  has_many :bids, dependent: :destroy
+  has_many :offers, dependent: :destroy
+
+  enum sale_type: { fixed_price: 0, auction: 1, negotiation: 2 }
 
   enum trading_status: {
     draft: 0,

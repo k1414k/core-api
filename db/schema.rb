@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_03_08_012559) do
+ActiveRecord::Schema[7.1].define(version: 2026_03_08_120002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -67,6 +67,16 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_08_012559) do
     t.index ["user_id"], name: "index_admin_permissions_on_user_id"
   end
 
+  create_table "bids", force: :cascade do |t|
+    t.bigint "item_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "amount", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_bids_on_item_id"
+    t.index ["user_id"], name: "index_bids_on_user_id"
+  end
+
   create_table "categories", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -92,6 +102,10 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_08_012559) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "condition", default: 0, null: false
+    t.integer "sale_type", default: 0, null: false
+    t.integer "start_price"
+    t.datetime "end_at"
+    t.integer "min_increment", default: 100, null: false
     t.index ["category_id"], name: "index_items_on_category_id"
     t.index ["price"], name: "index_items_on_price"
     t.index ["trading_status"], name: "index_items_on_trading_status"
@@ -106,6 +120,17 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_08_012559) do
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_messages_on_order_id"
     t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
+  create_table "offers", force: :cascade do |t|
+    t.bigint "item_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "amount", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_offers_on_item_id"
+    t.index ["user_id"], name: "index_offers_on_user_id"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -163,12 +188,16 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_08_012559) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "addresses", "users"
   add_foreign_key "admin_permissions", "users"
+  add_foreign_key "bids", "items"
+  add_foreign_key "bids", "users"
   add_foreign_key "favorites", "items"
   add_foreign_key "favorites", "users"
   add_foreign_key "items", "categories"
   add_foreign_key "items", "users"
   add_foreign_key "messages", "orders"
   add_foreign_key "messages", "users"
+  add_foreign_key "offers", "items"
+  add_foreign_key "offers", "users"
   add_foreign_key "orders", "items"
   add_foreign_key "orders", "users", column: "buyer_id"
   add_foreign_key "orders", "users", column: "seller_id"

@@ -1,6 +1,8 @@
 class User < ActiveRecord::Base
   has_many :messages, dependent: :destroy
   has_many :items
+  has_many :bids, dependent: :destroy
+  has_many :offers, dependent: :destroy
   has_many :buy_orders, class_name: "Order", foreign_key: :buyer_id
   has_many :sell_orders, class_name: "Order", foreign_key: :seller_id
   has_many :favorites, dependent: :destroy

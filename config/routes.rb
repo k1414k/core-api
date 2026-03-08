@@ -35,14 +35,26 @@ Rails.application.routes.draw do
   namespace :auction do
     namespace :v1, module: :v1, path: "v1" do
       get "user", to: "users#my_profile"
+      get "user/items", to: "users#my_items"
       patch "user/wallet", to: "users#update_wallet"
       patch "user/avatar", to: "users#update_avatar"
 
+      get "users/:id/items", to: "items#user_items"
+
       put "favorites/:item_id", to: "favorites#toggle"
       resources :categories, only: [:index]
-      resources :items
+      get "items/ending_soon", to: "items#ending_soon"
+      get "items/one_yen", to: "items#one_yen"
+      get "items/recently_sold", to: "items#recently_sold"
+      resources :items do
+        resources :bids, only: [:index, :create], controller: "bids"
+        resources :offers, only: [:create], controller: "offers"
+      end
+      resources :offers, only: [:update], controller: "offers"
       resources :addresses, only: [:index, :create, :update, :destroy]
-      resources :orders, only: [:create], controller: "order"
+      resources :orders, only: [:index, :show, :create, :update], controller: "order" do
+        resources :messages, only: [:index, :create], controller: "messages"
+      end
     end
   end
 end

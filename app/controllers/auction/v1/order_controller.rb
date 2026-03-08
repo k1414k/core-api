@@ -1,16 +1,35 @@
 class Auction::V1::OrderController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_order, only: [:show, :update]
+
+  def index
+    role = params[:role]
+
+    orders =
+      if role == "seller"
+        current_user.sell_orders
+      else
+        current_user.buy_orders
+      end
+
+    orders = orders.includes(:item, :buyer, :seller).order(created_at: :desc)
+
+    render json: orders.map { |o| order_json(o) }
+  end
+
+  def show
+    render json: order_detail_json(@order)
+  end
 
   def create
     item = Item.find(order_params[:item_id])
 
-    # 購入可否チェック
     validate_purchase!(item)
 
     order = nil
     ActiveRecord::Base.transaction do
-      # 1. オーダーを作成（配送先をスナップショットとして保存）
       shipping_address = build_shipping_address
+
       order = Order.create!(
         item: item,
         buyer_id: current_user.id,
@@ -19,26 +38,43 @@ class Auction::V1::OrderController < ApplicationController
         status: order_status_for_payment(order_params[:payment_method])
       )
 
-      # 2. 支払い処理（ポイントの場合は即時引き落とし）
       process_payment!(item, order_params[:payment_method])
 
-      # 3. ポイント決済の場合は売り手の売上（balance）に加算
       if order_params[:payment_method].to_s == "ポイント"
         seller = item.user
         seller.update!(balance: seller.balance + item.price)
       end
 
-      # 4. 商品を「取引中」にする
       item.update!(trading_status: :trading)
     end
 
     render json: { message: "success", order_id: order.id }, status: :ok
-  rescue ActiveRecord::RecordNotFound => e
+
+  rescue ActiveRecord::RecordNotFound
     render json: { error: "商品が見つかりません" }, status: :not_found
-  rescue OrderController::PurchaseError => e
+  rescue PurchaseError => e
     render json: { error: e.message }, status: :unprocessable_entity
   rescue => e
     render json: { error: e.message }, status: :unprocessable_entity
+  end
+
+  def update
+    case params[:status]
+    when "waiting_shipping"
+      return head :forbidden unless @order.seller_id == current_user.id
+      @order.update!(status: :waiting_shipping)
+    when "waiting_review"
+      return head :forbidden unless @order.seller_id == current_user.id
+      @order.update!(status: :waiting_review)
+    when "completed"
+      return head :forbidden unless @order.buyer_id == current_user.id
+      @order.update!(status: :completed)
+      @order.item.update!(trading_status: :sold) if @order.item.trading?
+    else
+      return render json: { error: "無効なステータスです" }, status: :unprocessable_entity
+    end
+
+    render json: order_detail_json(@order)
   end
 
   private
@@ -67,7 +103,6 @@ class Auction::V1::OrderController < ApplicationController
   end
 
   def order_status_for_payment(payment_method)
-    # ポイント決済の場合は即時入金扱いで shipping 待ちへ
     payment_method == "ポイント" ? :waiting_shipping : :waiting_payment
   end
 
@@ -77,5 +112,42 @@ class Auction::V1::OrderController < ApplicationController
     raise PurchaseError, "残高が足りません" if current_user.points < item.price
 
     current_user.update!(points: current_user.points - item.price)
+  end
+
+  def set_order
+    @order = Order.find(params[:id])
+    head :forbidden unless @order.buyer_id == current_user.id || @order.seller_id == current_user.id
+  end
+
+  def order_json(order)
+    {
+      id: order.id,
+      item_id: order.item_id,
+      item_title: order.item.title,
+      item_image: order.item.images.attached? ? rails_blob_path(order.item.images.first, only_path: true) : nil,
+      price: order.item.price,
+      status: order.status,
+      buyer_nickname: order.buyer.nickname,
+      seller_nickname: order.seller.nickname,
+      created_at: order.created_at
+    }
+  end
+
+  def order_detail_json(order)
+    {
+      id: order.id,
+      item_id: order.item_id,
+      item: {
+        id: order.item.id,
+        title: order.item.title,
+        price: order.item.price,
+        image: order.item.images.attached? ? rails_blob_path(order.item.images.first, only_path: true) : nil
+      },
+      buyer: { id: order.buyer.id, nickname: order.buyer.nickname },
+      seller: { id: order.seller.id, nickname: order.seller.nickname },
+      status: order.status,
+      shipping_address: order.shipping_address,
+      created_at: order.created_at
+    }
   end
 end

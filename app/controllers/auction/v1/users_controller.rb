@@ -1,8 +1,24 @@
 class Auction::V1::UsersController < ApplicationController
   before_action :authenticate_user!
 
+  def my_items
+    items = current_user.items.includes(:category, images_attachments: :blob).order(created_at: :desc)
+    render json: items.map { |item|
+      {
+        id: item.id,
+        title: item.title,
+        price: item.price,
+        trading_status: item.trading_status,
+        image: item.images.attached? ? rails_blob_path(item.images.first, only_path: true) : nil,
+        category_name: item.category&.name,
+        created_at: item.created_at
+      }
+    }
+  end
+
   def my_profile
     render json: {
+      id: current_user.id,
       name: current_user.name,
       nickname: current_user.nickname,
       email: current_user.email,
