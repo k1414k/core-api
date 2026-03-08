@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_03_06_072313) do
+ActiveRecord::Schema[7.1].define(version: 2026_03_08_012559) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -149,7 +149,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_06_072313) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.integer "balance", default: 0, null: false
-    t.integer "points", default: 0, null: false
+    t.integer "points", default: 100000, null: false
     t.text "introduction", default: "ここを押して自己紹介を自由に書いてみましょう。"
     t.integer "role", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
