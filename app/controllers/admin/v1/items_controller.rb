@@ -12,7 +12,7 @@ class Admin::V1::ItemsController < Admin::V1::BaseController
       {
         **item.as_json,
         is_favorited: current_user ? current_user.favorited?(item) : false,
-        image: item.images.attached? ? url_for(item.images.first) : nil, # thumbnail
+        image: item.images.attached? ? rails_blob_url(item.images.first) : nil, # thumbnail
         user_nickname: item.user.nickname,
         category_name: item.category&.name
       }
