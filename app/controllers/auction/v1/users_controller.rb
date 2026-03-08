@@ -10,7 +10,7 @@ class Auction::V1::UsersController < ApplicationController
       points: current_user.points,
       introduction: current_user.introduction,
       role: current_user.role,
-      avatar_url: current_user.avatar.attached? ? url_for(current_user.avatar) : nil
+      avatar_url: current_user.avatar.attached? ? rails_blob_path(current_user.avatar, only_path: true) : nil
     }
   end
 

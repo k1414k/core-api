@@ -9,7 +9,7 @@ class Auction::V1::ItemsController < ApplicationController
       {
         **item.as_json,
         is_favorited: current_user ? current_user.favorited?(item) : false,
-        image: item.images.attached? ? blob_url_for(item.images.first) : nil, # thumbnail
+        image: item.images.attached? ? blob_path_for(item.images.first) : nil,
         user_nickname: item.user.nickname
       }
     }
@@ -23,7 +23,7 @@ class Auction::V1::ItemsController < ApplicationController
       user_nickname: item.user.nickname,
       created_by_current_user: current_user&.id == item.user_id,
       is_favorited: current_user&.favorited?(item) || false,
-      images: item.images.map { |img| blob_url_for(img) }
+      images: item.images.map { |img| blob_path_for(img) }
     }
   end
 
@@ -73,19 +73,7 @@ class Auction::V1::ItemsController < ApplicationController
     )
   end
 
-  def blob_url_for(blob)
-    rails_blob_url(
-      blob,
-      host: public_asset_host,
-      protocol: public_asset_protocol
-    )
-  end
-
-  def public_asset_host
-    Rails.env.production? ? ENV.fetch("APP_HOST") : "localhost:3000"
-  end
-
-  def public_asset_protocol
-    Rails.env.production? ? ENV.fetch("APP_PROTOCOL", "https") : "http"
+  def blob_path_for(blob)
+    rails_blob_path(blob, only_path: true)
   end
 end
