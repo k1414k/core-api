@@ -1,16 +1,16 @@
 class Auction::V1::CategoriesController < ApplicationController
-  # before_action :set_category, only: [:show]
-
   def index
     categories = Category.all
-    render json: categories
+    render json: categories.map { |category| category_json(category) }
   end
 
-  # def show
-  #   render json: @category
-  # end
-
   private
+
+  def category_json(category)
+    category.as_json.merge(
+      image_url: category.image.attached? ? rails_blob_path(category.image, only_path: true) : nil
+    )
+  end
 
   def set_category
     @category = Category.find(params[:id])
